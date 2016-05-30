@@ -17,7 +17,7 @@ unsigned int hash(const char * key, unsigned int table_size);
 
 void hash_table_init(hash_table_t * table, unsigned int table_size);
 
-void hash_table_add(hash_table_t * hash_table, list_node_t * node, const char *key);
+void hash_table_add(hash_table_t * table, list_node_t * node, const char *key);
 
 list_node_t ** hash_table_get_list(hash_table_t * table, const char * key);
 

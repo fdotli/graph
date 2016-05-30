@@ -16,11 +16,11 @@ typedef struct num_name_table_s
    unsigned int table_size; 
 } num_name_table_t;
 
-void init_adjacent_table(adjacent_table_t * table, unsigned int table_size);
+void init_adjacent_table(adjacent_table_t * table, unsigned int size);
 
 void add_to_adjacent_table(adjacent_table_t * table, unsigned int num, list_node_t * node);
 
-void init_num_name_table(num_name_table_t * table, unsigned int table_size);
+void init_num_name_table(num_name_table_t * table, unsigned int size);
 
 void add_to_num_name_table(num_name_table_t * table, unsigned int num, const char * name);
 #endif
