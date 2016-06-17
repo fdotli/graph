@@ -12,6 +12,7 @@ typedef struct node_s
     unsigned int num;                   
     list_node_t adjacent_table_node;    
     list_node_t hash_table_node; 
+    list_node_t queue_node;
 } node_t;
 
 typedef struct node_pool_s
