@@ -1,4 +1,5 @@
 #include <stddef.h>
+#include <assert.h>
 #include "queue.h"
 
 
@@ -19,7 +20,7 @@ void enqueue(queue_t * queue, list_node_t * node)
     else
     {
         node->next = NULL;
-        queue->tail.next = node;
+        queue->tail->next = node;
         queue->tail = node;
     }
 }

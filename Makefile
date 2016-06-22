@@ -13,4 +13,4 @@ $(EXECUTABLE): $(OBJECTS)
 .c.o:
 	$(CC) $(CFLAGS) $< -o $@
 clean:
-	rm $(wildcard *.o) graph
+	-rm $(wildcard *.o) graph

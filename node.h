@@ -6,12 +6,13 @@
 #define NODE_POOL_SIZE_MAX 10
 
 
-typedef struct node_s                   
-{   
-    const char * name;                  
-    unsigned int num;                   
-    list_node_t adjacent_table_node;    
-    list_node_t hash_table_node; 
+typedef struct node_s
+{
+    const char * name;
+    unsigned int num;
+    int        indegree;
+    unsigned long adjacent_tbl_bm;
+    list_node_t hash_table_node;
     list_node_t queue_node;
 } node_t;
 
