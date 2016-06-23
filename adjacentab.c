@@ -4,6 +4,40 @@
 #include "adjacentab.h"
 #include "bitops.h"
 
+
+void  init_adjacent_table(adjacent_table_t * table, unsigned int size)
+{
+    assert(size <= NODE_POOL_SIZE_MAX);
+    table->size = size;
+}
+
+void init_adjacent_table_node_pool(adjacent_table_node_pool_t * pool, int size)
+{
+    assert(size <= EDGE_POOL_SIZE_MAX);
+    pool->next_index = 0;
+}
+
+adjacent_table_node_t * get_next_node(adjacent_table_node_pool_t * pool, unsigned int num)
+{
+    assert(pool->next_index < EDGE_POOL_SIZE_MAX);
+
+    adjacent_table_node_t * node;
+
+    node = &pool->nodes_array[pool->next_index];
+    node->num = num;
+    pool->next_index++;
+
+    return node;
+}
+
+void add_edge(adjacent_table_t * table, unsigned int vetexA, adjacent_table_node_t * node_vetexB)
+{
+    assert((vetexA <= table->size) && (node_vetexB->num <= table->size));
+    assert(vetexA != node_vetexB->num);
+
+    insert_list_node(&table->bucket[vetexA], &node_vetexB->anchor);
+}
+
 void compute_node_indegree(node_pool_t * pool)
 {
     unsigned int current_num;

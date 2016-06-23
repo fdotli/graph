@@ -60,11 +60,12 @@ node_t * get_node_in_node_pool(node_pool_t * pool, const char * key)
     return node;
 }
 
-void init_graph(graph_t * graph, unsigned int node_count)
+void init_graph(graph_t * graph, unsigned int node_count, unsigned int edge_count)
 {
     init_nodes_pool(&graph->node_pool, node_count);
     hash_table_init(&graph->hash_table, node_count);
-    init_adjacent_table(&graph->adjacent_table, node_count + 1);
+    init_adjacent_table(&graph->adjacent_table, node_count);
+    init_adjacent_table_node_pool(&graph->adjacent_table_node_pool, edge_count);
     init_num_name_table(&graph->num_name_table, node_count + 1);
 }
 
@@ -89,17 +90,22 @@ int main(int argc, char ** argv)
     unsigned int i;
     node_t * nodeA = NULL;
     node_t * nodeB = NULL;
+    adjacent_table_node_t * adjacent_node;
 
-    init_graph(&graph, 7);
+    init_graph(&graph, 7, 48);
     for(i = 0; i < sizeof(edges)/sizeof(edges[0]); i++)
     {
        nodeA = find_node_by_key(&graph, edges[i].vetexA);
        nodeB = find_node_by_key(&graph, edges[i].vetexB);
 
        bitmap_set(&nodeA->adjacent_tbl_bm, nodeB->num, 1);
+       nodeB->indegree++;
+
+       adjacent_node = get_next_node(&graph.adjacent_table_node_pool, nodeB->num);
+       add_edge(&graph.adjacent_table, nodeA->num, adjacent_node);
     }
 
-    compute_node_indegree(&graph.node_pool);
+    //compute_node_indegree(&graph.node_pool);
 
     return 0;
 }

@@ -18,9 +18,11 @@ typedef struct edge_s
 
 typedef struct graph_s
 {
-    node_pool_t      node_pool;
+    node_pool_t       node_pool;
     hash_table_t      hash_table;
     num_name_table_t  num_name_table;
+    adjacent_table_t  adjacent_table;
+    adjacent_table_node_pool_t adjacent_table_node_pool;
 } graph_t;
 
 
