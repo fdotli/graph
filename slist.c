@@ -6,18 +6,18 @@ void init_list_node(list_node_t * node)
     node->next = NULL;
 }
 
-void insert_list_node(list_node_t ** list, list_node_t * node)                                                                                                                               
+void insert_list_node(list_node_t ** list, list_node_t * node)
 {
     if ((!list) || (!node))
         return;
-   
+
     if (!*list)
     {
-        *list = node; 
+        *list = node;
     }
     else
     {
-	node->next = *list;
-	*list = node; 
-    } 
+    node->next = *list;
+    *list = node;
+    }
 }

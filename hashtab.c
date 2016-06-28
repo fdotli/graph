@@ -11,7 +11,7 @@ unsigned int hash(const char * key, unsigned int table_size)
     key++;
     while( *key != '\0')
     {
-        hash_val = (hash_val << 5) + *key++;     
+        hash_val = (hash_val << 5) + *key++;
     }
 
     return hash_val % table_size;
@@ -27,7 +27,7 @@ void hash_table_init(hash_table_t * table, unsigned int size)
     table->hash_func = hash;
 
     for(i = 0; i < table->size; i++)
-        table->buckets[i] = NULL;  
+        table->buckets[i] = NULL;
 }
 
 void hash_table_add(hash_table_t * table, list_node_t * node, const char *key)

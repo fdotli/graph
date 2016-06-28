@@ -45,14 +45,14 @@ void compute_node_indegree(node_pool_t * pool)
 
     for (current_num = 1; current_num < pool->node_count + 1; current_num++)
     {
-		for (i = 0; i < pool->node_count; i++)
-		{
-			if (current_num == pool->nodes_array[i].num)
-					continue;
+        for (i = 0; i < pool->node_count; i++)
+        {
+            if (current_num == pool->nodes_array[i].num)
+                    continue;
 
             if (test_bit(current_num, &pool->nodes_array[i].adjacent_tbl_bm))
                 pool->nodes_array[current_num - 1].indegree++;
-		}
+        }
     }
 }
 

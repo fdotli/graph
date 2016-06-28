@@ -26,33 +26,33 @@
  */
 static unsigned long __fls(unsigned long word)
 {
-	int num = BITS_PER_LONG - 1;
+    int num = BITS_PER_LONG - 1;
 
 #if BITS_PER_LONG == 64
-	if (!(word & (~0ul << 32))) {
-		num -= 32;
-		word <<= 32;
-	}
+    if (!(word & (~0ul << 32))) {
+        num -= 32;
+        word <<= 32;
+    }
 #endif
-	if (!(word & (~0ul << (BITS_PER_LONG-16)))) {
-		num -= 16;
-		word <<= 16;
-	}
-	if (!(word & (~0ul << (BITS_PER_LONG-8)))) {
-		num -= 8;
-		word <<= 8;
-	}
-	if (!(word & (~0ul << (BITS_PER_LONG-4)))) {
-		num -= 4;
-		word <<= 4;
-	}
-	if (!(word & (~0ul << (BITS_PER_LONG-2)))) {
-		num -= 2;
-		word <<= 2;
-	}
-	if (!(word & (~0ul << (BITS_PER_LONG-1))))
-		num -= 1;
-	return num;
+    if (!(word & (~0ul << (BITS_PER_LONG-16)))) {
+        num -= 16;
+        word <<= 16;
+    }
+    if (!(word & (~0ul << (BITS_PER_LONG-8)))) {
+        num -= 8;
+        word <<= 8;
+    }
+    if (!(word & (~0ul << (BITS_PER_LONG-4)))) {
+        num -= 4;
+        word <<= 4;
+    }
+    if (!(word & (~0ul << (BITS_PER_LONG-2)))) {
+        num -= 2;
+        word <<= 2;
+    }
+    if (!(word & (~0ul << (BITS_PER_LONG-1))))
+        num -= 1;
+    return num;
 }
 
 /**
@@ -63,33 +63,33 @@ static unsigned long __fls(unsigned long word)
  */
 static unsigned long __ffs(unsigned long word)
 {
-	int num = 0;
+    int num = 0;
 
 #if BITS_PER_LONG == 64
-	if ((word & 0xffffffff) == 0) {
-		num += 32;
-		word >>= 32;
-	}
+    if ((word & 0xffffffff) == 0) {
+        num += 32;
+        word >>= 32;
+    }
 #endif
-	if ((word & 0xffff) == 0) {
-		num += 16;
-		word >>= 16;
-	}
-	if ((word & 0xff) == 0) {
-		num += 8;
-		word >>= 8;
-	}
-	if ((word & 0xf) == 0) {
-		num += 4;
-		word >>= 4;
-	}
-	if ((word & 0x3) == 0) {
-		num += 2;
-		word >>= 2;
-	}
-	if ((word & 0x1) == 0)
-		num += 1;
-	return num;
+    if ((word & 0xffff) == 0) {
+        num += 16;
+        word >>= 16;
+    }
+    if ((word & 0xff) == 0) {
+        num += 8;
+        word >>= 8;
+    }
+    if ((word & 0xf) == 0) {
+        num += 4;
+        word >>= 4;
+    }
+    if ((word & 0x3) == 0) {
+        num += 2;
+        word >>= 2;
+    }
+    if ((word & 0x1) == 0)
+        num += 1;
+    return num;
 }
 
 
@@ -105,28 +105,28 @@ static unsigned long __ffs(unsigned long word)
  * is XORed with each fetched word before searching it for one bits.
  */
 static unsigned long _find_next_bit(const unsigned long *addr,
-		unsigned long nbits, unsigned long start, unsigned long invert)
+        unsigned long nbits, unsigned long start, unsigned long invert)
 {
-	unsigned long tmp;
+    unsigned long tmp;
 
-	if (!nbits || start >= nbits)
-		return nbits;
+    if (!nbits || start >= nbits)
+        return nbits;
 
-	tmp = addr[start / BITS_PER_LONG] ^ invert;
+    tmp = addr[start / BITS_PER_LONG] ^ invert;
 
-	/* Handle 1st word. */
-	tmp &= BITMAP_FIRST_WORD_MASK(start);
-	start = round_down(start, BITS_PER_LONG);
+    /* Handle 1st word. */
+    tmp &= BITMAP_FIRST_WORD_MASK(start);
+    start = round_down(start, BITS_PER_LONG);
 
-	while (!tmp) {
-		start += BITS_PER_LONG;
-		if (start >= nbits)
-			return nbits;
+    while (!tmp) {
+        start += BITS_PER_LONG;
+        if (start >= nbits)
+            return nbits;
 
-		tmp = addr[start / BITS_PER_LONG] ^ invert;
-	}
+        tmp = addr[start / BITS_PER_LONG] ^ invert;
+    }
 
-	return min(start + __ffs(tmp), nbits);
+    return min(start + __ffs(tmp), nbits);
 }
 #endif
 
@@ -135,17 +135,17 @@ static unsigned long _find_next_bit(const unsigned long *addr,
  * Find the next set bit in a memory region.
  */
 unsigned long find_next_bit(const unsigned long *addr, unsigned long size,
-			    unsigned long offset)
+                unsigned long offset)
 {
-	return _find_next_bit(addr, size, offset, 0UL);
+    return _find_next_bit(addr, size, offset, 0UL);
 }
 #endif
 
 #ifndef find_next_zero_bit
 unsigned long find_next_zero_bit(const unsigned long *addr, unsigned long size,
-				 unsigned long offset)
+                 unsigned long offset)
 {
-	return _find_next_bit(addr, size, offset, ~0UL);
+    return _find_next_bit(addr, size, offset, ~0UL);
 }
 #endif
 
@@ -155,14 +155,14 @@ unsigned long find_next_zero_bit(const unsigned long *addr, unsigned long size,
  */
 unsigned long find_first_bit(const unsigned long *addr, unsigned long size)
 {
-	unsigned long idx;
+    unsigned long idx;
 
-	for (idx = 0; idx * BITS_PER_LONG < size; idx++) {
-		if (addr[idx])
-			return min(idx * BITS_PER_LONG + __ffs(addr[idx]), size);
-	}
+    for (idx = 0; idx * BITS_PER_LONG < size; idx++) {
+        if (addr[idx])
+            return min(idx * BITS_PER_LONG + __ffs(addr[idx]), size);
+    }
 
-	return size;
+    return size;
 }
 #endif
 
@@ -172,33 +172,33 @@ unsigned long find_first_bit(const unsigned long *addr, unsigned long size)
  */
 unsigned long find_first_zero_bit(const unsigned long *addr, unsigned long size)
 {
-	unsigned long idx;
+    unsigned long idx;
 
-	for (idx = 0; idx * BITS_PER_LONG < size; idx++) {
-		if (addr[idx] != ~0UL)
-			return min(idx * BITS_PER_LONG + ffz(addr[idx]), size);
-	}
+    for (idx = 0; idx * BITS_PER_LONG < size; idx++) {
+        if (addr[idx] != ~0UL)
+            return min(idx * BITS_PER_LONG + ffz(addr[idx]), size);
+    }
 
-	return size;
+    return size;
 }
 #endif
 
 #ifndef find_last_bit
 unsigned long find_last_bit(const unsigned long *addr, unsigned long size)
 {
-	if (size) {
-		unsigned long val = BITMAP_LAST_WORD_MASK(size);
-		unsigned long idx = (size-1) / BITS_PER_LONG;
+    if (size) {
+        unsigned long val = BITMAP_LAST_WORD_MASK(size);
+        unsigned long idx = (size-1) / BITS_PER_LONG;
 
-		do {
-			val &= addr[idx];
-			if (val)
-				return idx * BITS_PER_LONG + __fls(val);
+        do {
+            val &= addr[idx];
+            if (val)
+                return idx * BITS_PER_LONG + __fls(val);
 
-			val = ~0ul;
-		} while (idx--);
-	}
-	return size;
+            val = ~0ul;
+        } while (idx--);
+    }
+    return size;
 }
 #endif
 
@@ -208,9 +208,9 @@ unsigned long find_last_bit(const unsigned long *addr, unsigned long size)
 static inline unsigned long ext2_swab(const unsigned long y)
 {
 #if BITS_PER_LONG == 64
-	return (unsigned long) __swab64((u64) y);
+    return (unsigned long) __swab64((u64) y);
 #elif BITS_PER_LONG == 32
-	return (unsigned long) __swab32((u32) y);
+    return (unsigned long) __swab32((u32) y);
 #else
 #error BITS_PER_LONG not defined
 #endif
@@ -218,44 +218,44 @@ static inline unsigned long ext2_swab(const unsigned long y)
 
 #if !defined(find_next_bit_le) || !defined(find_next_zero_bit_le)
 static unsigned long _find_next_bit_le(const unsigned long *addr,
-		unsigned long nbits, unsigned long start, unsigned long invert)
+        unsigned long nbits, unsigned long start, unsigned long invert)
 {
-	unsigned long tmp;
+    unsigned long tmp;
 
-	if (!nbits || start >= nbits)
-		return nbits;
+    if (!nbits || start >= nbits)
+        return nbits;
 
-	tmp = addr[start / BITS_PER_LONG] ^ invert;
+    tmp = addr[start / BITS_PER_LONG] ^ invert;
 
-	/* Handle 1st word. */
-	tmp &= ext2_swab(BITMAP_FIRST_WORD_MASK(start));
-	start = round_down(start, BITS_PER_LONG);
+    /* Handle 1st word. */
+    tmp &= ext2_swab(BITMAP_FIRST_WORD_MASK(start));
+    start = round_down(start, BITS_PER_LONG);
 
-	while (!tmp) {
-		start += BITS_PER_LONG;
-		if (start >= nbits)
-			return nbits;
+    while (!tmp) {
+        start += BITS_PER_LONG;
+        if (start >= nbits)
+            return nbits;
 
-		tmp = addr[start / BITS_PER_LONG] ^ invert;
-	}
+        tmp = addr[start / BITS_PER_LONG] ^ invert;
+    }
 
-	return min(start + __ffs(ext2_swab(tmp)), nbits);
+    return min(start + __ffs(ext2_swab(tmp)), nbits);
 }
 #endif
 
 #ifndef find_next_zero_bit_le
 unsigned long find_next_zero_bit_le(const void *addr, unsigned
-		long size, unsigned long offset)
+        long size, unsigned long offset)
 {
-	return _find_next_bit_le(addr, size, offset, ~0UL);
+    return _find_next_bit_le(addr, size, offset, ~0UL);
 }
 #endif
 
 #ifndef find_next_bit_le
 unsigned long find_next_bit_le(const void *addr, unsigned
-		long size, unsigned long offset)
+        long size, unsigned long offset)
 {
-	return _find_next_bit_le(addr, size, offset, 0UL);
+    return _find_next_bit_le(addr, size, offset, 0UL);
 }
 #endif
 
