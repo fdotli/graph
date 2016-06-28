@@ -90,35 +90,35 @@ void top_sort(graph_t * graph, queue_t * queue, top_sequence_t * top_sequence)
 
 	for (i = 0; i < graph->vetex_count; i++)
 	{
-		node_t * node = &graph->node_pool.nodes_array[i];
+	    node_t * node = &graph->node_pool.nodes_array[i];
 
-		if (!node->indegree)
-			enqueue(queue, &node->queue_node);
+	    if (!node->indegree)
+	    enqueue(queue, &node->queue_node);
 	}
 
 	while(!isempty(queue))
 	{
-		node_t * dequeue_node;
-		list_node_t * adjacent_anchor;
+	    node_t * dequeue_node;
+	    list_node_t * adjacent_anchor;
 
-		dequeue_node = list_entry(dequeue(queue), node_t, queue_node);
-		top_sequence->top_array[top_sequence->cur_pos++] = dequeue_node->num;
+	    dequeue_node = list_entry(dequeue(queue), node_t, queue_node);
+	    top_sequence->top_array[top_sequence->cur_pos++] = dequeue_node->num;
 
-		adjacent_anchor = graph->adjacent_table.bucket[dequeue_node->num];
+	    adjacent_anchor = graph->adjacent_table.bucket[dequeue_node->num];
 
-		while(adjacent_anchor)
-		{
-			adjacent_table_node_t * adjacent_table_node;
+	    while(adjacent_anchor)
+	    {
+            adjacent_table_node_t * adjacent_table_node;
             node_t * node;
 
-			adjacent_table_node = list_entry(adjacent_anchor, adjacent_table_node_t, anchor);
+            adjacent_table_node = list_entry(adjacent_anchor, adjacent_table_node_t, anchor);
 
-			node = graph->num_node_table.node_array[adjacent_table_node->num];
+            node = graph->num_node_table.node_array[adjacent_table_node->num];
             if(!--node->indegree)
                 enqueue(queue, &node->queue_node);
 
             adjacent_anchor = adjacent_anchor->next;
-		}
+        }
 	}
 }
 
