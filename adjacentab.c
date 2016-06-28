@@ -56,7 +56,7 @@ void compute_node_indegree(node_pool_t * pool)
     }
 }
 
-void init_num_name_table(num_name_table_t * table, unsigned int size)
+void init_num_node_table(num_node_table_t * table, unsigned int size)
 {
     int i;
 
@@ -65,14 +65,14 @@ void init_num_name_table(num_name_table_t * table, unsigned int size)
     table->table_size = size;
 
     for (i = 0; i < size; i++)
-        table->num_name_array[i] = NULL;
+        table->node_array[i] = NULL;
 }
 
-void add_to_num_name_table(num_name_table_t * table, unsigned int num, const char * name)
+void add_to_num_node_table(num_node_table_t * table, unsigned int num, node_t * node)
 {
     assert(num < table->table_size);
 
-    table->num_name_array[num] = name;
+    table->node_array[num] = node;
 }
 
 

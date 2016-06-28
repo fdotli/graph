@@ -7,6 +7,7 @@ void init_node(node_t * node)
     node->name = NULL;
     node->num  = 0;
     node->indegree = 0;
+    node->top_num = 0;
     node->adjacent_tbl_bm = 0;
     LIST_NODE_INIT(&node->hash_table_node);
     LIST_NODE_INIT(&node->queue_node);

@@ -1,9 +1,9 @@
 #include <stddef.h>
 #include "graph.h"
 #include "bitmap.h"
+#include "queue.h"
 
 
-unsigned int top_sequece[NODE_COUNT];
 
 edge_t edges[] =
 {
@@ -66,7 +66,7 @@ void init_graph(graph_t * graph, unsigned int node_count, unsigned int edge_coun
     hash_table_init(&graph->hash_table, node_count);
     init_adjacent_table(&graph->adjacent_table, node_count);
     init_adjacent_table_node_pool(&graph->adjacent_table_node_pool, edge_count);
-    init_num_name_table(&graph->num_name_table, node_count + 1);
+    init_num_node_table(&graph->num_node_table, node_count + 1);
 }
 
 node_t * find_node_by_key(graph_t * graph, const char * key)
@@ -76,14 +76,57 @@ node_t * find_node_by_key(graph_t * graph, const char * key)
     if (!(node = get_node_in_hash_table(&graph->hash_table, key)))
     {
         node = get_node_in_node_pool(&graph->node_pool, key);
+        graph->vetex_count++;
         hash_table_add(&graph->hash_table, &node->hash_table_node, key);
-        add_to_num_name_table(&graph->num_name_table, node->num, key);
+        add_to_num_node_table(&graph->num_node_table, node->num, node);
     }
 
     return node;
 }
 
+void top_sort(graph_t * graph, queue_t * queue, top_sequence_t * top_sequence)
+{
+    int i;
+
+	for (i = 0; i < graph->vetex_count; i++)
+	{
+		node_t * node = &graph->node_pool.nodes_array[i];
+
+		if (!node->indegree)
+			enqueue(queue, &node->queue_node);
+	}
+
+	while(!isempty(queue))
+	{
+		node_t * dequeue_node;
+		list_node_t * adjacent_anchor;
+
+		dequeue_node = list_entry(dequeue(queue), node_t, queue_node);
+		top_sequence->top_array[top_sequence->cur_pos++] = dequeue_node->num;
+
+		adjacent_anchor = graph->adjacent_table.bucket[dequeue_node->num];
+
+		while(adjacent_anchor)
+		{
+			adjacent_table_node_t * adjacent_table_node;
+            node_t * node;
+
+			adjacent_table_node = list_entry(adjacent_anchor, adjacent_table_node_t, anchor);
+
+			node = graph->num_node_table.node_array[adjacent_table_node->num];
+            if(!--node->indegree)
+                enqueue(queue, &node->queue_node);
+
+            adjacent_anchor = adjacent_anchor->next;
+		}
+	}
+}
+
 graph_t graph;
+
+queue_t queue = {NULL, NULL};
+
+top_sequence_t top_sequence = {{0}, 0};
 
 int main(int argc, char ** argv)
 {
@@ -103,7 +146,10 @@ int main(int argc, char ** argv)
 
        adjacent_node = get_next_node(&graph.adjacent_table_node_pool, nodeB->num);
        add_edge(&graph.adjacent_table, nodeA->num, adjacent_node);
+       graph.edge_count++;
     }
+
+    top_sort(&graph, &queue, &top_sequence);
 
     //compute_node_indegree(&graph.node_pool);
 

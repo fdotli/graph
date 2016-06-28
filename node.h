@@ -11,6 +11,7 @@ typedef struct node_s
     const char * name;
     unsigned int num;
     int        indegree;
+    unsigned int top_num;
     unsigned long adjacent_tbl_bm;
     list_node_t hash_table_node;
     list_node_t queue_node;

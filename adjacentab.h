@@ -24,11 +24,11 @@ typedef struct adjacent_table_node_pool_s
     unsigned int next_index;
 } adjacent_table_node_pool_t;
 
-typedef struct num_name_table_s
+typedef struct num_node_table_s
 {
-   const char * num_name_array[NODE_POOL_SIZE_MAX];
+   node_t * node_array[NODE_POOL_SIZE_MAX];
    unsigned int table_size;
-} num_name_table_t;
+} num_node_table_t;
 
 void init_adjacent_table(adjacent_table_t * table, unsigned int size);
 
@@ -40,8 +40,8 @@ void add_edge(adjacent_table_t * table, unsigned int vetexA, adjacent_table_node
 
 void compute_node_indegree(node_pool_t * pool);
 
-void init_num_name_table(num_name_table_t * table, unsigned int size);
+void init_num_node_table(num_node_table_t * table, unsigned int size);
 
-void add_to_num_name_table(num_name_table_t * table, unsigned int num, const char * name);
+void add_to_num_node_table(num_node_table_t * table, unsigned int num, node_t * node);
 
 #endif
