@@ -1,6 +1,7 @@
 #ifndef NODE_H
 #define NODE_H
 
+#include <stdbool.h>
 #include "slist.h"
 
 #define NODE_POOL_SIZE_MAX 10
@@ -8,13 +9,15 @@
 
 typedef struct node_s
 {
-    const char * name;
-    unsigned int num;
-    int        indegree;
-    unsigned int top_num;
-    unsigned long adjacent_tbl_bm;
-    list_node_t hash_table_node;
-    list_node_t queue_node;
+    const char *     name;
+    unsigned int     num;
+    int              indegree;
+    bool             known;
+    int              distance;
+    unsigned int     pre_num;
+    unsigned long    adjacent_tbl_bm;
+    list_node_t      hash_table_node;
+    list_node_t      queue_node;
 } node_t;
 
 typedef struct node_pool_s

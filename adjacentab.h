@@ -27,7 +27,7 @@ typedef struct adjacent_table_node_pool_s
 typedef struct num_node_table_s
 {
    node_t * node_array[NODE_POOL_SIZE_MAX];
-   unsigned int table_size;
+   unsigned int size;
 } num_node_table_t;
 
 void init_adjacent_table(adjacent_table_t * table, unsigned int size);

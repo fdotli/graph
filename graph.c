@@ -1,4 +1,5 @@
 #include <stddef.h>
+#include <assert.h>
 #include "graph.h"
 #include "bitmap.h"
 #include "queue.h"
@@ -8,15 +9,13 @@
 edge_t edges[] =
 {
 {"v1one",   "v2two",   0},
-{"v1one",   "v3three", 0},
 {"v1one",   "v4four",  0},
 {"v2two",   "v4four",  0},
 {"v2two",   "v5five",  0},
+{"v3three", "v1one",   0},
 {"v3three", "v6six",   0},
 {"v4four",  "v3three", 0},
-{"v4four",  "v6six",   0},
-{"v4four",  "v7seven", 0},
-{"v5five",  "v4four",  0},
+{"v4four",  "v5five",  0},
 {"v5five",  "v7seven", 0},
 {"v7seven", "v6six",   0}
 };
@@ -122,6 +121,55 @@ void top_sort(graph_t * graph, queue_t * queue, top_sequence_t * top_sequence)
     }
 }
 
+void compute_shortest_path(graph_t * graph, queue_t * queue, unsigned int start)
+{
+    unsigned int distance = 0;
+    adjacent_table_node_t * adjacent_table_node;
+    node_t * node;
+
+    assert(start < graph->num_node_table.size);
+    assert(start < graph->adjacent_table.size);
+
+
+    node = graph->num_node_table.node_array[start];
+
+    node->known = true;
+    node->distance = distance;
+    node->pre_num = 0;
+
+    enqueue(queue, &node->queue_node);
+
+    while(!isempty(queue))
+    {
+        unsigned int pre_num = 0;
+        list_node_t * dequeue_list_node;
+
+        dequeue_list_node = dequeue(queue);
+        node = list_entry(dequeue_list_node, node_t, queue_node);
+        pre_num = node->num;
+
+        adjacent_table_node = list_entry(graph->adjacent_table.bucket[node->num], adjacent_table_node_t, anchor);
+        while(adjacent_table_node)
+        {
+            list_node_t * next;
+            node = graph->num_node_table.node_array[adjacent_table_node->num];
+
+            if (!node->known)
+            {
+                node->known = true;
+                node->distance = ++distance;
+                node->pre_num = pre_num;
+
+                enqueue(queue, &node->queue_node);
+            }
+
+            next = adjacent_table_node->anchor.next;
+
+            adjacent_table_node = list_entry(next, adjacent_table_node_t, anchor);
+        }
+    }
+}
+
 graph_t graph;
 
 queue_t queue = {NULL, NULL};
@@ -149,9 +197,11 @@ int main(int argc, char ** argv)
        graph.edge_count++;
     }
 
-    top_sort(&graph, &queue, &top_sequence);
+    //top_sort(&graph, &queue, &top_sequence);
 
     //compute_node_indegree(&graph.node_pool);
+
+    compute_shortest_path(&graph, &queue, 3);
 
     return 0;
 }

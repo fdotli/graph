@@ -27,7 +27,7 @@ void insert_list_node(list_node_t ** list, list_node_t * node);
 #define list_for_each(pos, head) \
 	for (pos = (head)->next; pos ; pos = pos->next)
 
-#define list_entry(ptr, type, member) container_of(ptr,type,member)
+#define list_entry(ptr, type, member) ((ptr) ? container_of(ptr,type,member) : 0)
 
 #define list_entry_key(ptr, type, member, key) (list_entry(ptr, type, member)->key)
 

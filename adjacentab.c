@@ -62,7 +62,7 @@ void init_num_node_table(num_node_table_t * table, unsigned int size)
 
     assert(size < NODE_POOL_SIZE_MAX);
 
-    table->table_size = size;
+    table->size = size;
 
     for (i = 0; i < size; i++)
         table->node_array[i] = NULL;
@@ -70,7 +70,7 @@ void init_num_node_table(num_node_table_t * table, unsigned int size)
 
 void add_to_num_node_table(num_node_table_t * table, unsigned int num, node_t * node)
 {
-    assert(num < table->table_size);
+    assert(num < table->size);
 
     table->node_array[num] = node;
 }
