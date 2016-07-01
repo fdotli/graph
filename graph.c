@@ -16,6 +16,8 @@ edge_t edges[] =
 {"v3three", "v6six",   0},
 {"v4four",  "v3three", 0},
 {"v4four",  "v5five",  0},
+{"v4four",  "v6six",   0},
+{"v4four",  "v7seven", 0},
 {"v5five",  "v7seven", 0},
 {"v7seven", "v6six",   0}
 };
@@ -63,7 +65,7 @@ void init_graph(graph_t * graph, unsigned int node_count, unsigned int edge_coun
 {
     init_nodes_pool(&graph->node_pool, node_count);
     hash_table_init(&graph->hash_table, node_count);
-    init_adjacent_table(&graph->adjacent_table, node_count);
+    init_adjacent_table(&graph->adjacent_table, node_count + 1);
     init_adjacent_table_node_pool(&graph->adjacent_table_node_pool, edge_count);
     init_num_node_table(&graph->num_node_table, node_count + 1);
 }
@@ -121,21 +123,22 @@ void top_sort(graph_t * graph, queue_t * queue, top_sequence_t * top_sequence)
     }
 }
 
-void compute_shortest_path(graph_t * graph, queue_t * queue, unsigned int start)
+void compute_shortest_path(graph_t * graph, queue_t * queue, const char * start)
 {
-    unsigned int distance = 0;
     adjacent_table_node_t * adjacent_table_node;
-    node_t * node;
+    node_t * node = NULL;
 
-    assert(start < graph->num_node_table.size);
-    assert(start < graph->adjacent_table.size);
+    assert(start);
 
 
-    node = graph->num_node_table.node_array[start];
+    node = find_node_by_key(graph, start);
 
-    node->known = true;
-    node->distance = distance;
-    node->pre_num = 0;
+    if(node)
+    {
+        node->known = true;
+        node->distance = 0;
+        node->pre_num = 0;
+    }
 
     enqueue(queue, &node->queue_node);
 
@@ -143,10 +146,12 @@ void compute_shortest_path(graph_t * graph, queue_t * queue, unsigned int start)
     {
         unsigned int pre_num = 0;
         list_node_t * dequeue_list_node;
+        unsigned int distance;
 
         dequeue_list_node = dequeue(queue);
         node = list_entry(dequeue_list_node, node_t, queue_node);
         pre_num = node->num;
+        distance = node->distance;
 
         adjacent_table_node = list_entry(graph->adjacent_table.bucket[node->num], adjacent_table_node_t, anchor);
         while(adjacent_table_node)
@@ -154,10 +159,10 @@ void compute_shortest_path(graph_t * graph, queue_t * queue, unsigned int start)
             list_node_t * next;
             node = graph->num_node_table.node_array[adjacent_table_node->num];
 
-            if (!node->known)
+            if (!node->known || node->distance > (distance + 1))
             {
                 node->known = true;
-                node->distance = ++distance;
+                node->distance = distance + 1;
                 node->pre_num = pre_num;
 
                 enqueue(queue, &node->queue_node);
@@ -201,7 +206,7 @@ int main(int argc, char ** argv)
 
     //compute_node_indegree(&graph.node_pool);
 
-    compute_shortest_path(&graph, &queue, 3);
+    compute_shortest_path(&graph, &queue, "v3three");
 
     return 0;
 }

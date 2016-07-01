@@ -60,7 +60,7 @@ void init_num_node_table(num_node_table_t * table, unsigned int size)
 {
     int i;
 
-    assert(size < NODE_POOL_SIZE_MAX);
+    assert(size <= NODE_POOL_SIZE_MAX);
 
     table->size = size;
 
