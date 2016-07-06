@@ -3,6 +3,7 @@
 #include "graph.h"
 #include "bitmap.h"
 #include "queue.h"
+#include "tree_main.h"
 
 
 
@@ -207,6 +208,8 @@ int main(int argc, char ** argv)
     //compute_node_indegree(&graph.node_pool);
 
     compute_shortest_path(&graph, &queue, "v3three");
+
+    tree_main(argc, argv);
 
     return 0;
 }

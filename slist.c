@@ -21,3 +21,26 @@ void insert_list_node(list_node_t ** list, list_node_t * node)
     *list = node;
     }
 }
+
+void delete_list_node(list_node_t ** list, list_node_t * node)
+{
+    list_node_t * iter, * prev;
+
+    if ((!list) || (!node))
+        return;
+
+    iter = *list;
+    prev = (list_node_t *)list;
+
+    while(iter)
+    {
+         if (iter == node)
+         {
+            prev->next = iter->next;
+            break;
+         }
+
+         prev = iter;
+         iter = iter->next;
+    }
+}

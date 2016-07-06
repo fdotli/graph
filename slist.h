@@ -1,14 +1,16 @@
 #ifndef SLIST_H
 #define SLIST_H
 
-typedef struct list_node_t
+typedef struct list_node_s
 {
-    struct list_node_t * next;
+    struct list_node_s * next;
 } list_node_t;
 
 void init_list_node(list_node_t * node);
 
 void insert_list_node(list_node_t ** list, list_node_t * node);
+
+void delete_list_node(list_node_t ** list, list_node_t * node);
 
 #ifndef offsetof
 
